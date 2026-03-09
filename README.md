@@ -1,10 +1,10 @@
-Software Security Laboratory
+Software Security Laboratory:
 A comprehensive portfolio of security experiments, vulnerability analysis, and defensive implementations.
 
-Project Overview
+Project Overview:
 This repository serves as a technical log for the Software Security (SS) Lab. It documents the identification of critical vulnerabilities (OWASP Top 10) and the implementation of industry-standard security controls.
 
-Experiment Index
+Experiment Index:
 1. Code Vulnerability Analysis
 Objective: Identify basic security flaws in C and Python.
 Vulnerabilities: Buffer Overflows, Insecure Input Handling, and Hardcoded Credentials.
@@ -47,13 +47,13 @@ Focus: Exploring history, cookies, and saved session data using Browser Develope
 Objective: Identify suspicious activities from system access logs.
 Outcome: Detecting brute-force attempts and drafting professional incident reports.
 
-Tech Stack & Tools
+Tech Stack & Tools:
 Languages: C, Python, SQL
 Network Analysis: Wireshark, tcpdump
 Web Security: OWASP ZAP, DVWA
 Methodologies: STRIDE Threat Modeling, Static Code Analysis
 
-Disclaimer
+Disclaimer:
 The content of this repository is for educational and ethical security research purposes only. Unauthorized access to or testing of computer systems is strictly prohibited and illegal.
 
 Author: ANSHUMAN RAJ SINGH
