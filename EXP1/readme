@@ -1,0 +1,129 @@
+# 🔐 Code Vulnerability Analysis Lab
+
+## 📌 Overview
+
+This project focuses on analyzing C and Python code snippets to identify common security vulnerabilities such as buffer overflows, format string misuse, hardcoded credentials, and unsafe OS command execution.
+
+The aim is to understand how insecure coding practices lead to exploitable weaknesses and how they can be mitigated using secure coding techniques.
+
+---
+
+## 🎯 Objectives
+
+* Identify common security flaws in code
+* Understand vulnerabilities in C and Python programs
+* Perform manual code walkthroughs
+* Learn secure coding practices and mitigation techniques
+
+---
+
+## 📁 Project Structure
+
+```
+.
+├── bufferoverflow/          # Buffer overflow vulnerabilities (C)
+├── formatstringmisuse/      # Format string vulnerabilities
+├── hardcodedcredentials/    # Hardcoded sensitive information
+├── unsafeoscommands/        # OS command injection vulnerabilities
+```
+
+---
+
+## 🧪 Vulnerabilities Covered
+
+### 🔹 Buffer Overflow
+
+* Occurs when input exceeds allocated memory
+* Common in C programs using unsafe functions like `gets()`
+* Can lead to memory corruption or arbitrary code execution
+
+---
+
+### 🔹 Format String Misuse
+
+* Caused by improper use of format specifiers in functions like `printf()`
+* Can leak memory or allow attackers to manipulate program execution
+
+---
+
+### 🔹 Hardcoded Credentials
+
+* Storing sensitive data (passwords, API keys) directly in source code
+* Risk of exposure if the code is leaked or shared
+
+---
+
+### 🔹 Unsafe OS Commands
+
+* Executing system commands using unsanitized user input
+* Example:
+
+  ```python
+  import os
+  user_input = input("Enter command: ")
+  os.system("ls " + user_input)
+  ```
+* Risk: command injection attacks
+
+---
+
+## 🔬 Methodology
+
+1. Collected sample vulnerable code snippets
+2. Performed manual code analysis
+3. Identified insecure coding patterns
+4. Evaluated potential risks
+5. Suggested secure coding alternatives
+
+---
+
+## 🔐 Mitigation Techniques
+
+* Use safe input functions (e.g., `fgets()` instead of `gets()`)
+* Validate and sanitize all user inputs
+* Avoid hardcoding sensitive information
+* Use environment variables or secure storage for credentials
+* Avoid executing OS commands directly with user input
+* Implement proper error handling
+
+---
+
+## 📊 Results
+
+* Successfully identified multiple vulnerabilities in sample programs
+* Gained understanding of how insecure coding leads to security risks
+* Learned practical approaches to secure application development
+
+---
+
+## 🚀 Future Scope
+
+* Develop an automated vulnerability detection tool
+* Integrate static analysis tools for large-scale code scanning
+* Expand analysis to web and network-based vulnerabilities
+* Incorporate machine learning for intelligent vulnerability detection
+
+---
+
+## 💡 Project Extension
+
+### 🔐 Smart Code Vulnerability Scanner
+
+A tool that:
+
+* Scans source code for common vulnerabilities
+* Detects insecure coding patterns automatically
+* Suggests fixes and improvements
+* Helps developers write secure code
+
+---
+
+## 🧠 Conclusion
+
+This experiment highlights the importance of secure coding practices and demonstrates how simple mistakes in code can lead to serious security vulnerabilities.
+
+---
+
+## ⚠️ Disclaimer
+
+This project is intended for educational purposes only. The vulnerabilities demonstrated are used to understand and improve security practices.
