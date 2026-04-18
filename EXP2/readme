@@ -1,0 +1,43 @@
+Simulating Input-Based Attacks and Implementing Protections
+Overview
+
+This experiment demonstrates common web application vulnerabilities such as SQL Injection and XSS (Cross-Site Scripting) by simulating attacks on a test environment. It also implements security measures such as input validation and sanitization to prevent such attacks.
+
+Objectives
+Understand SQL Injection and XSS attack mechanisms
+Perform controlled attacks on a test web application
+Identify insecure input handling practices
+Implement input validation and sanitization techniques
+
+Tools Used
+DVWA (Damn Vulnerable Web Application) / Local PHP Web App
+XAMPP (Apache + MySQL)
+Browser Developer Tools
+VS Code
+
+Methodology
+Set up a vulnerable web application locally
+Attempt SQL Injection via login input fields
+Perform XSS attack using script injection in input fields
+Observe system behavior and security flaws
+Apply input validation and sanitization techniques
+Re-test to verify protection effectiveness
+
+Vulnerabilities Demonstrated
+SQL Injection via unsanitized queries
+Stored/Reflected XSS via input fields
+Lack of server-side input validation
+
+Countermeasures Implemented
+Prepared SQL statements
+Input sanitization using htmlspecialchars()
+Server-side validation rules
+Output encoding for safe rendering
+
+Outcome
+
+The experiment successfully demonstrated how insecure input handling leads to exploitation and how proper validation effectively mitigates these risks.
+
+Conclusion
+
+Input-based attacks remain one of the most common web vulnerabilities. Proper sanitization and secure coding practices significantly reduce attack surface and improve application security.
