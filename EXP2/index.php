@@ -1,117 +1,187 @@
 <?php
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors',1);
 
-$conn = mysqli_connect("localhost", "root", "", "simple_login");
+$conn = mysqli_connect("localhost","root","","login_system");
+
 $message = "";
 
-if (isset($_POST['submit'])) {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
-    $password_input = $_POST['password'];
+if(isset($_POST['submit'])){
 
-    // CHECK IF USER EXISTS
-    $stmt = mysqli_prepare($conn, "SELECT password_hash, salt FROM users WHERE username = ?");
-    mysqli_stmt_bind_param($stmt, "s", $username);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    if ($user = mysqli_fetch_assoc($result)) {
-        // --- LOGIN LOGIC ---
-        $stored_hash = $user['password_hash'];
-        $stored_salt = $user['salt'];
+    // ❌ Vulnerable query (kept as per original intentional design)
+    $query = "SELECT * FROM users WHERE username='$username' AND password='$password'";
 
-        // Hash the input using the stored salt
-        $check_hash = hash('sha256', $password_input . $stored_salt);
+    $result = mysqli_query($conn,$query);
 
-        if ($check_hash === $stored_hash) {
-            $message = "ACCESS GRANTED 🔓<br><small>Verified with Salt: $stored_salt</small>";
-        } else {
-            $message = "INVALID PASSWORD ❌";
-        }
+    if(mysqli_num_rows($result) > 0){
+        $message = "PROXIMITY AUTHENTICATED: ACCESS GRANTED 🔓";
     } else {
-        // --- REGISTRATION LOGIC (Auto-create if user doesn't exist) ---
-        // 1. Generate a unique random salt
-        $new_salt = bin2hex(random_bytes(16)); 
-        
-        // 2. Create the hash (Password + Salt)
-        $new_hash = hash('sha256', $password_input . $new_salt);
-
-        $reg_stmt = mysqli_prepare($conn, "INSERT INTO users (username, password_hash, salt) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($reg_stmt, "sss", $username, $new_hash, $new_salt);
-        
-        if (mysqli_stmt_execute($reg_stmt)) {
-            $message = "NEW USER REGISTERED ✅<br><small>Salt & Hash stored in DB</small>";
-        }
+        $message = "CRITICAL ERROR: AUTHENTICATION FAILED ❌";
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>AAA Secure Terminal</title>
+    <meta charset="UTF-8">
+    <title>Sentinel Cyber-Gate | Secure Login</title>
     <style>
-        body { background: black; color: #00ff00; font-family: 'Courier New', monospace; overflow: hidden; }
-        canvas { position: fixed; top: 0; left: 0; z-index: -1; opacity: 0.4; }
+        :root {
+            --primary: #00f2ff;
+            --danger: #ff003c;
+            --bg-dark: #050a0f;
+            --card-bg: rgba(10, 20, 30, 0.85);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            height: 100vh;
+            background: radial-gradient(circle, #0d1b2a 0%, #050a0f 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Scanline Effect */
+        body::before {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
         .card {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 400px; padding: 30px; background: rgba(0, 20, 0, 0.9);
-            border: 2px solid #00ff00; border-radius: 10px; text-align: center;
-            box-shadow: 0 0 20px #00ff00;
+            position: relative;
+            width: 400px;
+            padding: 40px;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 242, 255, 0.3);
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 10px rgba(0, 242, 255, 0.1);
+            backdrop-filter: blur(10px);
+            z-index: 10;
         }
+
+        /* Decorative Corners */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -2px; left: -2px;
+            width: 20px; height: 20px;
+            border-top: 2px solid var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            background: rgba(0, 242, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            display: inline-block;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+        }
+
         input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            background: black; border: 1px solid #00ff00; color: #00ff00;
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #1a3a4a;
+            color: var(--primary);
+            font-family: 'Courier New', monospace;
+            outline: none;
+            transition: 0.3s;
         }
-        input[type="submit"] { background: #00ff00; color: black; font-weight: bold; cursor: pointer; }
-        input[type="submit"]:hover { background: #003300; color: #00ff00; }
-        .message { margin-top: 20px; padding: 10px; border: 1px dashed #00ff00; font-size: 0.9em; }
-        h2 { letter-spacing: 3px; margin-bottom: 20px; }
+
+        input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
+
+        input[type="submit"] {
+            margin-top: 20px;
+            background: var(--primary);
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        input[type="submit"]:hover {
+            background: #fff;
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .message {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.4);
+            border-left: 3px solid var(--primary);
+            font-family: 'Courier New', monospace;
+        }
+
+        .error { border-left-color: var(--danger); color: var(--danger); }
+
+        a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        a:hover { color: var(--primary); }
+
     </style>
 </head>
 <body>
 
-<canvas id="matrix"></canvas>
-
 <div class="card">
-    <h2>SYSTEM ACCESS</h2>
-    <p style="font-size: 10px;">[ ALGORITHM: SHA-256 + MANUAL SALT ]</p>
-    
+    <div class="status-badge">SYSTEM STATUS: VIGILANT</div>
+    <h2>Sentinel Cyber-Gate</h2>
+
     <form method="POST">
-        <input type="text" name="username" placeholder="USERNAME" required>
-        <input type="password" name="password" placeholder="PASSWORD" required>
-        <input type="submit" name="submit" value="EXECUTE_AUTH">
+        <input type="text" name="username" placeholder="IDENTIFICATION ID" required autocomplete="off">
+        <input type="password" name="password" placeholder="ENCRYPTED KEY" required>
+        <input type="submit" name="submit" value="ESTABLISH UPLINK">
     </form>
 
-    <?php if($message != ""): ?>
-        <div class="message"><?php echo $message; ?></div>
-    <?php endif; ?>
-</div>
-
-<script>
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const letters = "0101010101010101";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
-    function draw() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ff00";
-        ctx.font = fontSize + "px monospace";
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters.charAt(Math.floor(Math.random() * letters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        }
+    <?php
+    if($message != ""){
+        $class = strpos($message, 'GRANTED') !== false ? '' : 'error';
+        echo "<div class='message $class'>$message</div>";
     }
-    setInterval(draw, 33);
-</script>
+    ?>
+
+    <a href="register.php">Initialize New Credentials</a>
+</div>
 
 </body>
 </html>
